@@ -1,0 +1,60 @@
+#!/usr/bin/env node
+
+'use strict';
+
+var jest = require('jest');
+var rollup = require('rollup');
+var path = require('path');
+
+function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
+
+var jest__default = /*#__PURE__*/_interopDefaultLegacy(jest);
+var path__default = /*#__PURE__*/_interopDefaultLegacy(path);
+
+const dist_dir_name = "tests/__unit";
+
+function unshiftPathByMap(map, rel_path) {
+	return Object.entries(map)
+		.map(([name, destination]) => [name, path__default['default'].join(rel_path, destination)])
+		.reduce((r, [name, destination]) => ((r[name] = destination), r), {});
+}
+
+async function transpile() {
+	const chunk = await rollup.rollup({
+		input: unshiftPathByMap(
+			{
+				main: "main.test.js",
+			},
+			"tests/cases"
+		),
+		plugins: [
+			{
+				resolveId(_, importee) {
+					if (importee) {
+						return {
+							id: importee,
+							external: true,
+						};
+					}
+				},
+			},
+		],
+	});
+
+	await chunk.write({
+		dir: dist_dir_name,
+		format: "cjs",
+		exports: "auto",
+	});
+}
+
+async function start() {
+	await transpile();
+
+	await jest__default['default'].run(
+		[`--config="tests/config.prod/jest.config.js"`],
+		dist_dir_name
+	);
+}
+
+start();

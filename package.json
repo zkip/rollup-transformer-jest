@@ -1,0 +1,25 @@
+{
+	"name": "rollup-transformer-jest",
+	"version": "0.0.0",
+	"main": "dist/rollup-transformer-jest.cjs.js",
+	"module": "dist/rollup-transformer-jest.es.js",
+	"jsnext:main": "dist/rollup-transformer-jest.es.js",
+	"scripts": {
+		"pretest": "rollup -c tests/config/rollup.config.js",
+		"test": "node tests/bin/run",
+		"build": "rollup -c"
+	},
+	"repository": "https://github.com/github:zkip/rollup-transformer-jest.git",
+	"author": "zkip <zkiplan@qq.com>",
+	"license": "MIT",
+	"dependencies": {
+		"rollup": "^2.36.1"
+	},
+	"devDependencies": {
+		"@rollup/plugin-commonjs": "^17.0.0",
+		"@rollup/plugin-node-resolve": "^11.0.1",
+		"@zrlps/rollup-plugin-resolve": "^0.2.0",
+		"jest": "^26.6.3",
+		"rollup-plugin-svelte": "^7.0.0"
+	}
+}
